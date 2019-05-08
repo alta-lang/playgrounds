@@ -1,0 +1,44 @@
+@@CTranspiler.include("stdio.h");
+
+import printf from "io"
+import rawstring from "types"
+import compress from "./lib/compress.alta"
+import Vector from "vector"
+import printVector from "./lib/common.alta"
+
+# for now, until Alta implements external types
+type FILE = ptr void
+
+declare literal function getchar(): int
+declare literal function fgets(buffer: rawstring, max: int, stream: FILE): rawstring
+
+literal function main(argc: int, argv: ptr rawstring): int {
+  printf("hi\n")
+
+  let data = new Vector<byte>
+  data.push(32)
+  data.push(85)
+  data.push(124)
+  data.push(90)
+  data.push(91)
+  data.push(92)
+  data.push(93)
+  data.push(94)
+  data.push(93)
+  data.push(92)
+  data.push(91)
+  data.push(90)
+  data.push(1)
+  data.push(0)
+  let test = compress(data)
+
+  printVector("data", data)
+  printVector("compressed", test.first)
+  printVector("runCounts", test.second)
+
+  let total = test.first.length + test.second.length
+
+  printf("byte length, r:c = %llu:%llu\n", data.length, total)
+
+  return 0
+}

@@ -1,0 +1,7 @@
+name: compression
+main: compress.alta
+version: 1.0.0
+targets:
+  - name: compress
+    main: compress.alta
+    type: exe

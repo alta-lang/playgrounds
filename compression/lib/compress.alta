@@ -1,0 +1,63 @@
+import Vector from "vector"
+import Pair, printVector from "./common.alta"
+import Size from "types"
+
+function deltaCompress(data: Vector<byte>): Vector<byte> {
+  if data.length < 1
+    return data
+
+  let compressed = new Vector<byte>
+  let last: byte = data.get(0)
+
+  compressed.push(last)
+
+  for i: Size in 1..data.length {
+    let temp = data.get(i)
+    compressed.push(temp - last)
+    last = temp
+  }
+
+  return compressed
+}
+
+# @returns A pair of vectors, the first containing the data and the second containing run-counts
+function runLengthCompress(data: Vector<byte>): Pair<Vector<byte>, Vector<byte>> {
+  let compressed = new Vector<byte>
+  let counts = new Vector<byte>
+  let foundSecond = false
+  let last: byte = 0
+  let push = true
+
+  for i: Size in 0..data.length {
+    let temp = data.get(i)
+    if temp == last {
+      if foundSecond {
+        let count: ref byte = counts.get(counts.length - 1)
+        count = count + 1
+        push = false
+      } else {
+        counts.push(2)
+        foundSecond = true
+      }
+    } else {
+      foundSecond = false
+    }
+
+    if push
+      compressed.push(temp)
+
+    last = temp
+    push = true
+  }
+
+  return new Pair<Vector<byte>, Vector<byte>>(compressed, counts)
+}
+
+# simple delta-run-length compression
+# first pass is delta compression
+# second pass is run-length compression
+#
+# @returns A pair of vectors, the first containing the data and the second containing run-counts
+export function compress(data: Vector<byte>): Pair<Vector<byte>, Vector<byte>> {
+  return runLengthCompress(deltaCompress(data))
+}

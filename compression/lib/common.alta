@@ -1,0 +1,30 @@
+import rawstring, Size from "types"
+import Vector from "vector"
+import printf from "io"
+
+export generic class Pair<T1, T2> {
+  public var first: T1
+  public var second: T2
+
+  public constructor(first: T1, second: T2) {
+    this.first = first
+    this.second = second
+  }
+}
+
+export function printVector(name: rawstring, data: Vector<byte>): void {
+  printf("%s = [", name)
+
+  let isFirst = true
+  for i: Size in 0..data.length {
+    if isFirst {
+      isFirst = false
+    } else {
+      printf(", ")
+    }
+
+    printf("%d", data.get(i))
+  }
+
+  printf("]\n")
+}
