@@ -1,18 +1,19 @@
 import Vector from "vector"
-import Pair, printVector from "./common.alta"
+import printVector from "./common.alta"
 import Size from "types"
+import Pair from "util"
 
 function deltaCompress(data: Vector<byte>): Vector<byte> {
   if data.length < 1
     return data
 
   let compressed = new Vector<byte>
-  let last: byte = data.get(0)
+  let last: byte = data[0]
 
   compressed.push(last)
 
   for i: Size in 1..data.length {
-    let temp = data.get(i)
+    let temp = data[i]
     compressed.push(temp - last)
     last = temp
   }
@@ -29,10 +30,10 @@ function runLengthCompress(data: Vector<byte>): Pair<Vector<byte>, Vector<byte>>
   let push = true
 
   for i: Size in 0..data.length {
-    let temp = data.get(i)
+    let temp = data[i]
     if temp == last {
       if foundSecond {
-        let count: ref byte = counts.get(counts.length - 1)
+        let count: ref byte = counts[counts.length - 1]
         count = count + 1
         push = false
       } else {
